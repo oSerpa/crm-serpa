@@ -66,6 +66,8 @@ alter table leads enable row level security;
 alter table interacoes enable row level security;
 alter table lembretes enable row level security;
 
+grant select, insert, update, delete on public.servicos, public.leads, public.interacoes, public.lembretes to authenticated;
+
 do $$
 declare t text;
 begin
@@ -112,3 +114,9 @@ drop policy if exists dono on perfil;
 create policy dono on perfil for all using (user_id = auth.uid()) with check (user_id = auth.uid());
 drop policy if exists dono on propostas;
 create policy dono on propostas for all using (user_id = auth.uid()) with check (user_id = auth.uid());
+
+-- Projetos novos do Supabase não dão permissão automática em tabelas criadas pelo SQL Editor.
+-- Sem isto aparece "42501 permission denied". O RLS acima continua limitando cada usuário aos próprios dados.
+grant select, insert, update, delete on public.propostas, public.perfil to authenticated;
+grant usage, select on all sequences in schema public to authenticated;
+notify pgrst, 'reload schema';
