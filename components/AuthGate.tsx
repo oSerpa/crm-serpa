@@ -22,12 +22,19 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
   }, [session, path, router]);
 
   if (path === "/login") return <>{children}</>;
-  if (!session) return <p className="p-8 text-sm text-slate-500">Carregando...</p>;
+  if (!session)
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-zinc-200 border-t-indigo-600" />
+      </div>
+    );
 
   return (
     <div className="min-h-screen">
       <Nav />
-      <main className="mx-auto max-w-7xl p-4">{children}</main>
+      <div className="app-main lg:pl-60">
+        <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</main>
+      </div>
     </div>
   );
 }

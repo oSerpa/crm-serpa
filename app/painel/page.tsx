@@ -1,4 +1,5 @@
 "use client";
+import PageHeader from "@/components/PageHeader";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { ORIGENS, brl } from "@/lib/types";
@@ -65,15 +66,15 @@ export default function Painel() {
 
   const Card = ({ titulo, valor, sub }: { titulo: string; valor: string; sub?: string }) => (
     <div className="card">
-      <p className="text-xs text-slate-500">{titulo}</p>
-      <p className="text-2xl font-bold">{valor}</p>
-      {sub && <p className="text-xs text-slate-500">{sub}</p>}
+      <p className="text-xs font-medium text-zinc-500">{titulo}</p>
+      <p className="mt-1 text-2xl font-semibold tracking-tight">{valor}</p>
+      {sub && <p className="text-xs text-zinc-500">{sub}</p>}
     </div>
   );
 
   return (
     <div className="space-y-4">
-      <h1 className="text-lg font-bold">Painel</h1>
+      <PageHeader titulo="Painel" sub="Seus números de vendas." />
       {aviso && <p className="text-sm text-red-600">{aviso}</p>}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Card titulo="Fechado este mês" valor={brl(r.doMes)} />
@@ -83,13 +84,13 @@ export default function Painel() {
       </div>
 
       <div className="card">
-        <h2 className="mb-3 font-semibold">Fechado nos últimos 6 meses</h2>
+        <h2 className="section-title mb-4">Fechado nos últimos 6 meses</h2>
         <div className="flex h-44 items-end gap-3">
           {r.meses.map((m) => (
             <div key={m.k} className="flex flex-1 flex-col items-center gap-1">
-              <span className="text-[10px] text-slate-500">{m.valor ? brl(m.valor).replace(",00", "") : ""}</span>
+              <span className="text-[10px] text-zinc-500">{m.valor ? brl(m.valor).replace(",00", "") : ""}</span>
               <div className="w-full rounded-t bg-indigo-500" style={{ height: `${(m.valor / r.max) * 120}px`, minHeight: m.valor ? 4 : 1 }} />
-              <span className="text-xs text-slate-600">{m.label}</span>
+              <span className="text-xs text-zinc-600">{m.label}</span>
             </div>
           ))}
         </div>
@@ -97,26 +98,26 @@ export default function Painel() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="card">
-          <h2 className="mb-2 font-semibold">Faturamento por serviço</h2>
+          <h2 className="section-title mb-3">Faturamento por serviço</h2>
           {r.porServico.map((s) => (
             <div key={s.nome} className="mb-2">
               <div className="flex justify-between text-sm"><span>{s.nome}</span><span>{brl(s.valor)}</span></div>
-              <div className="h-2 rounded bg-slate-100"><div className="h-2 rounded bg-indigo-500" style={{ width: `${(s.valor / r.maxServico) * 100}%` }} /></div>
+              <div className="h-2 rounded bg-zinc-100"><div className="h-2 rounded bg-indigo-500" style={{ width: `${(s.valor / r.maxServico) * 100}%` }} /></div>
             </div>
           ))}
-          {!r.porServico.length && <p className="text-sm text-slate-400">Nenhuma proposta aceita ainda.</p>}
+          {!r.porServico.length && <p className="text-sm text-zinc-400">Nenhuma proposta aceita ainda.</p>}
         </div>
         <div className="card">
-          <h2 className="mb-2 font-semibold">De onde vêm os clientes</h2>
+          <h2 className="section-title mb-3">De onde vêm os clientes</h2>
           <table className="w-full text-sm">
-            <thead className="text-xs text-slate-500"><tr><th className="text-left">Origem</th><th className="text-right">Leads</th><th className="text-right">Fechados</th><th className="text-right">Conversão</th></tr></thead>
+            <thead className="text-xs uppercase tracking-wide text-zinc-500"><tr><th className="text-left">Origem</th><th className="text-right">Leads</th><th className="text-right">Fechados</th><th className="text-right">Conversão</th></tr></thead>
             <tbody>
               {r.porOrigem.map((o) => (
-                <tr key={o.label} className="border-t border-slate-100"><td className="py-1">{o.label}</td><td className="text-right">{o.total}</td><td className="text-right">{o.fechados}</td><td className="text-right">{o.taxa}%</td></tr>
+                <tr key={o.label} className="border-t border-zinc-100"><td className="py-1">{o.label}</td><td className="text-right">{o.total}</td><td className="text-right">{o.fechados}</td><td className="text-right">{o.taxa}%</td></tr>
               ))}
             </tbody>
           </table>
-          {!r.porOrigem.length && <p className="text-sm text-slate-400">Nenhum lead ainda.</p>}
+          {!r.porOrigem.length && <p className="text-sm text-zinc-400">Nenhum lead ainda.</p>}
         </div>
       </div>
     </div>

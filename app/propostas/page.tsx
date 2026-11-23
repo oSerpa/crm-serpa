@@ -1,4 +1,5 @@
 "use client";
+import PageHeader from "@/components/PageHeader";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
@@ -21,35 +22,33 @@ export default function Propostas() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <h1 className="mr-auto text-lg font-bold">Propostas ({filtradas.length})</h1>
+      <PageHeader titulo="Propostas" sub="Para criar uma proposta, abra o lead e clique em Nova proposta.">
         <select className="input w-auto" value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="">Todas</option>
           {STATUS_PROPOSTA.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
         </select>
-      </div>
-      <p className="text-xs text-slate-500">Para criar uma proposta, abra o lead e clique em &quot;Nova proposta&quot;.</p>
+      </PageHeader>
       {erro && <p className="text-sm text-red-600">{erro}</p>}
-      <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs text-slate-500">
-            <tr><th className="p-2">#</th><th className="p-2">Título</th><th className="p-2">Cliente</th><th className="p-2">Total</th><th className="p-2">Status</th><th className="p-2">Criada</th></tr>
+      <div className="tabela-box">
+        <table className="tabela">
+          <thead>
+            <tr><th>#</th><th>Título</th><th>Cliente</th><th>Total</th><th>Status</th><th>Criada</th></tr>
           </thead>
           <tbody>
             {filtradas.map((p) => {
               const st = STATUS_PROPOSTA.find((s) => s.id === p.status)!;
               return (
-                <tr key={p.id} className="border-t border-slate-100 hover:bg-slate-50">
-                  <td className="p-2 text-slate-500">{p.numero}</td>
-                  <td className="p-2"><Link className="font-medium text-indigo-700 hover:underline" href={`/propostas/${p.id}`}>{p.titulo}</Link></td>
-                  <td className="p-2">{p.leads?.nome}</td>
-                  <td className="p-2">{brl(p.total)}</td>
-                  <td className="p-2"><span className={`rounded px-2 py-0.5 text-xs ${st.cor}`}>{st.label}</span></td>
-                  <td className="p-2 text-xs">{dataBR(p.criado_em)}</td>
+                <tr key={p.id}>
+                  <td className="text-zinc-500">{p.numero}</td>
+                  <td><Link className="font-medium text-zinc-900 hover:text-indigo-600" href={`/propostas/${p.id}`}>{p.titulo}</Link></td>
+                  <td>{p.leads?.nome}</td>
+                  <td>{brl(p.total)}</td>
+                  <td><span className={`badge ${st.cor}`}>{st.label}</span></td>
+                  <td className="text-xs">{dataBR(p.criado_em)}</td>
                 </tr>
               );
             })}
-            {!filtradas.length && <tr><td colSpan={6} className="p-6 text-center text-slate-400">Nenhuma proposta ainda.</td></tr>}
+            {!filtradas.length && <tr><td colSpan={6} className="py-10 text-center text-zinc-400">Nenhuma proposta ainda.</td></tr>}
           </tbody>
         </table>
       </div>

@@ -25,7 +25,7 @@ export default function PropostaPage() {
     supabase.from("perfil").select("*").maybeSingle().then(({ data }) => setPerfil(data));
   }, [carregar]);
 
-  if (!p) return <p className="text-sm text-slate-500">Carregando...</p>;
+  if (!p) return <p className="text-sm text-zinc-500">Carregando...</p>;
 
   const editar = (mud: Partial<Proposta>) => {
     const novo = { ...p, ...mud };
@@ -74,7 +74,7 @@ export default function PropostaPage() {
       <div className="no-print space-y-3">
         <div className="flex flex-wrap items-center gap-2">
           <Link href={`/leads/${p.lead_id}`} className="mr-auto text-sm text-indigo-700 hover:underline">← {p.leads?.nome}</Link>
-          <span className={`rounded px-2 py-0.5 text-xs ${st.cor}`}>{st.label}</span>
+          <span className={`badge ${st.cor}`}>{st.label}</span>
         </div>
         <div className="card space-y-2">
           <label className="label">Título</label>
@@ -84,7 +84,7 @@ export default function PropostaPage() {
             <div key={i} className="flex gap-2">
               <input className="input flex-1" placeholder="Descrição" value={it.descricao} onChange={(e) => editarItem(i, { descricao: e.target.value })} />
               <input className="input w-28" type="number" step="0.01" placeholder="R$" value={it.valor} onChange={(e) => editarItem(i, { valor: Number(e.target.value) })} />
-              <button className="text-slate-400 hover:text-red-600" title="Remover" onClick={() => editar({ itens: p.itens.filter((_, j) => j !== i) })}>×</button>
+              <button className="text-zinc-400 hover:text-red-600" title="Remover" onClick={() => editar({ itens: p.itens.filter((_, j) => j !== i) })}>×</button>
             </div>
           ))}
           <button className="text-sm text-indigo-700" onClick={() => editar({ itens: [...p.itens, { descricao: "", valor: 0 }] })}>+ Adicionar item</button>
@@ -102,39 +102,39 @@ export default function PropostaPage() {
           </div>
         </div>
         <div className="card flex flex-wrap items-center gap-2">
-          <span className="mr-auto text-sm text-slate-600">O cliente respondeu?</span>
+          <span className="mr-auto text-sm text-zinc-600">O cliente respondeu?</span>
           <button className="btn" onClick={() => status("aceita")}>Aceitou</button>
           <button className="btn-sec" onClick={() => status("recusada")}>Recusou</button>
           <button className="text-sm text-red-600" onClick={excluir}>Excluir</button>
         </div>
-        {msg && <p className="text-sm text-slate-700">{msg}</p>}
+        {msg && <p className="text-sm text-zinc-700">{msg}</p>}
         {!perfil?.nome && <p className="text-xs text-amber-700">Preencha <Link className="underline" href="/perfil">Meus dados</Link> para seu nome e contato aparecerem na proposta.</p>}
       </div>
 
       <div className="print-area card space-y-4 bg-white p-8 text-sm">
-        <div className="flex justify-between border-b border-slate-200 pb-4">
+        <div className="flex justify-between border-b border-zinc-200 pb-4">
           <div>
             <p className="text-lg font-bold">{perfil?.nome || "Seu nome"}</p>
-            <p className="text-slate-500">{[perfil?.whatsapp, perfil?.email, perfil?.cidade].filter(Boolean).join(" · ")}</p>
+            <p className="text-zinc-500">{[perfil?.whatsapp, perfil?.email, perfil?.cidade].filter(Boolean).join(" · ")}</p>
           </div>
-          <div className="text-right text-slate-500">
+          <div className="text-right text-zinc-500">
             <p>Proposta #{p.numero}</p>
             <p>{dataBR(p.criado_em)}</p>
           </div>
         </div>
         <div>
-          <p className="text-slate-500">Para</p>
+          <p className="text-zinc-500">Para</p>
           <p className="font-medium">{p.leads?.nome}{p.leads?.cidade ? `, ${p.leads.cidade}` : ""}</p>
         </div>
         <h2 className="text-xl font-bold">{p.titulo}</h2>
         <table className="w-full">
           <tbody>
             {p.itens.filter((i) => i.descricao || Number(i.valor)).map((i, k) => (
-              <tr key={k} className="border-b border-slate-100"><td className="py-2">{i.descricao}</td><td className="py-2 text-right">{brl(i.valor)}</td></tr>
+              <tr key={k} className="border-b border-zinc-100"><td className="py-2">{i.descricao}</td><td className="py-2 text-right">{brl(i.valor)}</td></tr>
             ))}
             {Number(p.desconto) > 0 && <>
-              <tr><td className="pt-2 text-slate-500">Subtotal</td><td className="pt-2 text-right text-slate-500">{brl(somaItens(p.itens))}</td></tr>
-              <tr><td className="text-slate-500">Desconto</td><td className="text-right text-slate-500">-{brl(p.desconto)}</td></tr>
+              <tr><td className="pt-2 text-zinc-500">Subtotal</td><td className="pt-2 text-right text-zinc-500">{brl(somaItens(p.itens))}</td></tr>
+              <tr><td className="text-zinc-500">Desconto</td><td className="text-right text-zinc-500">-{brl(p.desconto)}</td></tr>
             </>}
             <tr><td className="pt-2 text-base font-bold">Total</td><td className="pt-2 text-right text-base font-bold">{brl(p.total)}</td></tr>
           </tbody>
@@ -145,7 +145,7 @@ export default function PropostaPage() {
           {perfil?.chave_pix && <p><b>Chave Pix:</b> {perfil.chave_pix}</p>}
           {p.validade && <p><b>Validade:</b> {dataBR(p.validade)}</p>}
         </div>
-        {perfil?.rodape && <p className="border-t border-slate-200 pt-4 text-xs text-slate-500 whitespace-pre-wrap">{perfil.rodape}</p>}
+        {perfil?.rodape && <p className="border-t border-zinc-200 pt-4 text-xs text-zinc-500 whitespace-pre-wrap">{perfil.rodape}</p>}
       </div>
     </div>
   );

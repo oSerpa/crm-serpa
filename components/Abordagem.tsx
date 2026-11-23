@@ -50,7 +50,7 @@ export default function Abordagem({ lead, onRegistrado }: { lead: Lead; onRegist
 
   return (
     <div className="space-y-2">
-      <h2 className="pt-2 font-semibold">Abordagem</h2>
+      <h2 className="section-title pt-3">Abordagem</h2>
       <select className="input" value={servicoId} onChange={(e) => setServicoId(e.target.value)}>
         <option value="">Mensagem geral</option>
         {servicos.map((s) => <option key={s.id} value={s.id}>{s.nome}</option>)}
@@ -61,9 +61,9 @@ export default function Abordagem({ lead, onRegistrado }: { lead: Lead; onRegist
         {links.instagram && <button className="btn-sec" onClick={() => abrir("instagram", links.instagram, true)}>Copiar e abrir direct</button>}
         {links.facebook && <button className="btn-sec" onClick={() => abrir("facebook", links.facebook, true)}>Copiar e abrir Facebook</button>}
       </div>
-      {semCanal && <p className="text-xs text-slate-500">Cadastre WhatsApp, Instagram ou Facebook no lead para usar os botões.</p>}
+      {semCanal && <p className="text-xs text-zinc-500">Cadastre WhatsApp, Instagram ou Facebook no lead para usar os botões.</p>}
       {aviso && <p className="text-xs text-green-700">{aviso}</p>}
-      <p className="text-xs text-slate-400">Ao clicar, o contato fica registrado no histórico e o lead vai para Contatado.</p>
+      <p className="text-xs text-zinc-400">Ao clicar, o contato fica registrado no histórico e o lead vai para Contatado.</p>
     </div>
   );
 }

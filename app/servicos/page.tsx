@@ -43,7 +43,7 @@ export default function Servicos() {
   return (
     <div className="grid gap-4 lg:grid-cols-3">
       <form onSubmit={salvar} className="card space-y-2">
-        <h2 className="font-semibold">{f.id ? "Editar serviço" : "Novo serviço"}</h2>
+        <h2 className="section-title">{f.id ? "Editar serviço" : "Novo serviço"}</h2>
         <input className="input" placeholder="Nome *" required value={f.nome} onChange={(e) => setF({ ...f, nome: e.target.value })} />
         <input className="input" placeholder="Preço base (R$)" type="number" step="0.01" value={f.preco} onChange={(e) => setF({ ...f, preco: e.target.value })} />
         <textarea className="input" rows={2} placeholder="Descrição" value={f.descricao} onChange={(e) => setF({ ...f, descricao: e.target.value })} />
@@ -57,19 +57,19 @@ export default function Servicos() {
 
       <div className="space-y-2 lg:col-span-2">
         <div className="flex items-center">
-          <h1 className="mr-auto text-lg font-bold">Serviços</h1>
+          <h1 className="page-title mr-auto">Serviços</h1>
           {!lista.length && <button className="btn-sec" onClick={criarSugestoes}>Criar meus serviços padrão</button>}
         </div>
         {lista.map((s) => (
           <div key={s.id} className={`card flex items-start gap-3 ${s.ativo ? "" : "opacity-50"}`}>
             <div className="mr-auto">
-              <p className="font-medium">{s.nome} <span className="text-sm font-normal text-slate-500">{brl(s.preco)}</span></p>
-              {s.descricao && <p className="text-sm text-slate-600">{s.descricao}</p>}
+              <p className="font-medium">{s.nome} <span className="text-sm font-normal text-zinc-500">{brl(s.preco)}</span></p>
+              {s.descricao && <p className="text-sm text-zinc-600">{s.descricao}</p>}
             </div>
             <button className="text-sm text-indigo-600" onClick={() => setF({
               id: s.id, nome: s.nome, descricao: s.descricao ?? "", preco: s.preco?.toString() ?? "", mensagem_padrao: s.mensagem_padrao ?? "",
             })}>Editar</button>
-            <button className="text-sm text-slate-500" onClick={() => alternar(s)}>{s.ativo ? "Desativar" : "Ativar"}</button>
+            <button className="text-sm text-zinc-500" onClick={() => alternar(s)}>{s.ativo ? "Desativar" : "Ativar"}</button>
           </div>
         ))}
       </div>

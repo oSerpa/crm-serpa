@@ -1,4 +1,5 @@
 "use client";
+import PageHeader from "@/components/PageHeader";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
@@ -104,7 +105,7 @@ export default function Buscar() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-lg font-bold">Buscar clientes no mapa</h1>
+      <PageHeader titulo="Buscar no mapa" sub="Encontre negócios por cidade e categoria e importe como lead." />
 
       <div className="card space-y-3">
         <form onSubmit={procurarCidade} className="flex flex-wrap gap-2">
@@ -114,7 +115,7 @@ export default function Buscar() {
         </form>
         {cidades.length > 0 && (
           <div className="space-y-1">
-            <p className="text-xs text-slate-500">Qual delas?</p>
+            <p className="text-xs text-zinc-500">Qual delas?</p>
             {cidades.map((c) => (
               <button key={c.viewbox} className="block text-left text-sm text-indigo-700 hover:underline" onClick={() => { setCidade(c); setCidades([]); setResultados([]); setEstado({}); }}>{c.nome}</button>
             ))}
@@ -128,13 +129,13 @@ export default function Buscar() {
           <input className="input max-w-xs" placeholder="Filtrar por nome (opcional)" value={nome} onChange={(e) => setNome(e.target.value)} />
           <button className="btn" disabled={!cidade || carregando}>{carregando ? "Buscando..." : "Buscar"}</button>
         </form>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-zinc-500">
           Os dados vêm do OpenStreetMap, que é grátis mas não tem todos os negócios pequenos. Cada busca traz até 40 lugares por tipo; use "Carregar mais" para ver o resto.
           {buscaGoogle && <> Para completar, <a className="text-indigo-700 underline" href={buscaGoogle} target="_blank">abra a mesma busca no Google Maps</a> e cadastre os que faltarem em <Link className="text-indigo-700 underline" href="/leads">Leads</Link>.</>}
         </p>
       </div>
 
-      {msg && <p className="text-sm text-slate-700">{msg}</p>}
+      {msg && <p className="text-sm text-zinc-700">{msg}</p>}
 
       {resultados.length > 0 && (
         <div className="space-y-2">
@@ -145,25 +146,25 @@ export default function Buscar() {
             <button className="text-indigo-700 hover:underline" onClick={() => setSelecionados(new Set(selecionaveis.map((n) => n.idExterno)))}>Selecionar todos</button>
             <button className="btn ml-auto" disabled={!selecionados.size} onClick={importar}>Importar {selecionados.size || ""} como lead</button>
           </div>
-          <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-xs text-slate-500">
-                <tr><th className="p-2"></th><th className="p-2">Nome</th><th className="p-2">Contato</th><th className="p-2">Site</th><th className="p-2">Endereço</th><th className="p-2"></th></tr>
+          <div className="tabela-box">
+            <table className="tabela">
+              <thead>
+                <tr><th></th><th>Nome</th><th>Contato</th><th>Site</th><th>Endereço</th><th></th></tr>
               </thead>
               <tbody>
                 {visiveis.map((n) => {
                   const importado = jaImportados.has(n.idExterno);
                   return (
-                    <tr key={n.idExterno} className={`border-t border-slate-100 ${importado ? "opacity-50" : ""}`}>
-                      <td className="p-2">
+                    <tr key={n.idExterno} className={importado ? "opacity-50" : ""}>
+                      <td>
                         {importado ? <span className="text-xs text-green-700">Importado</span>
                           : <input type="checkbox" checked={selecionados.has(n.idExterno)} onChange={() => alternar(n.idExterno)} />}
                       </td>
-                      <td className="p-2 font-medium">{n.nome}</td>
-                      <td className="p-2 text-xs">{[n.whatsapp || n.telefone, n.instagram].filter(Boolean).join(" · ") || "-"}</td>
-                      <td className="p-2 text-xs">{n.site ? <a className="text-indigo-700 underline" href={n.site.startsWith("http") ? n.site : `https://${n.site}`} target="_blank">tem</a> : <span className="font-semibold text-amber-700">não tem</span>}</td>
-                      <td className="p-2 text-xs">{n.endereco ?? "-"}</td>
-                      <td className="p-2 text-xs"><a className="text-indigo-700 underline" href={linkMaps(n)} target="_blank">Google Maps</a></td>
+                      <td className="font-medium">{n.nome}</td>
+                      <td className="text-xs">{[n.whatsapp || n.telefone, n.instagram].filter(Boolean).join(" · ") || "-"}</td>
+                      <td className="text-xs">{n.site ? <a className="text-indigo-700 underline" href={n.site.startsWith("http") ? n.site : `https://${n.site}`} target="_blank">tem</a> : <span className="font-semibold text-amber-700">não tem</span>}</td>
+                      <td className="text-xs">{n.endereco ?? "-"}</td>
+                      <td className="text-xs"><a className="text-indigo-700 underline" href={linkMaps(n)} target="_blank">Google Maps</a></td>
                     </tr>
                   );
                 })}
