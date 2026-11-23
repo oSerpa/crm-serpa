@@ -2,6 +2,7 @@
 import PageHeader from "@/components/PageHeader";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { explicarErro } from "@/lib/erros";
 import { ORIGENS, brl } from "@/lib/types";
 
 type P = { total: number; status: string; aceita_em: string | null; criado_em: string; servico_id: string | null };
@@ -18,7 +19,7 @@ export default function Painel() {
 
   useEffect(() => {
     supabase.from("propostas").select("total, status, aceita_em, criado_em, servico_id").then(({ data, error }) => {
-      if (error) setAviso("Rode o arquivo supabase/migrations/002_propostas.sql no Supabase para ver o faturamento.");
+      if (error) setAviso(explicarErro(error, "propostas"));
       setProps(data ?? []);
     });
     supabase.from("leads").select("origem, status").then(({ data }) => setLeads(data ?? []));

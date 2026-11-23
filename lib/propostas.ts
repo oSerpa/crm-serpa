@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { explicarErro } from "./erros";
 import type { ItemProposta, Lead, Perfil, Proposta } from "./types";
 import { brl, dataBR } from "./types";
 
@@ -27,7 +28,7 @@ export async function criarProposta(lead: Lead): Promise<string> {
     validade,
     condicoes: CONDICOES_PADRAO,
   }).select("id").single();
-  if (error) throw new Error(error.message.includes("propostas") ? "Rode o arquivo supabase/migrations/002_propostas.sql no Supabase antes de usar propostas." : error.message);
+  if (error) throw new Error(explicarErro(error, "propostas"));
   return data.id;
 }
 

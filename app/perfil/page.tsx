@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { explicarErro } from "@/lib/erros";
 import { Perfil } from "@/lib/types";
 
 const vazio: Perfil = { nome: "", whatsapp: "", email: "", cidade: "", chave_pix: "", rodape: "" };
@@ -11,7 +12,7 @@ export default function MeusDados() {
 
   useEffect(() => {
     supabase.from("perfil").select("*").maybeSingle().then(({ data, error }) => {
-      if (error) setMsg("Rode o arquivo supabase/migrations/002_propostas.sql no Supabase para ativar esta tela.");
+      if (error) setMsg(explicarErro(error, "perfil"));
       if (data) setF({ ...vazio, ...data });
     });
   }, []);
