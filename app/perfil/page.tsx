@@ -32,8 +32,8 @@ export default function MeusDados() {
 
   return (
     <form onSubmit={salvar} className="card max-w-xl space-y-3">
-      <h1 className="text-lg font-bold">Meus dados</h1>
-      <p className="text-xs text-slate-500">Aparecem no cabeçalho e no rodapé das propostas.</p>
+      <h1 className="page-title">Meus dados</h1>
+      <p className="text-xs text-zinc-500">Aparecem no cabeçalho e no rodapé das propostas.</p>
       {campo("nome", "Seu nome ou marca")}
       <div className="grid gap-3 sm:grid-cols-2">
         {campo("whatsapp", "WhatsApp")}
@@ -46,7 +46,7 @@ export default function MeusDados() {
         <textarea className="input" rows={3} placeholder="Ex: Obrigado pela confiança! Instagram @seuperfil" value={f.rodape ?? ""} onChange={(e) => setF({ ...f, rodape: e.target.value })} />
       </div>
       <button className="btn">Salvar</button>
-      {msg && <p className="text-sm text-slate-700">{msg}</p>}
+      {msg && <p className="text-sm text-zinc-700">{msg}</p>}
     </form>
   );
 }

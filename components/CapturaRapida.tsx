@@ -68,7 +68,7 @@ export default function CapturaRapida({ onSalvo }: { onSalvo?: (l: Lead) => void
 
   return (
     <div className="card space-y-2">
-      <h2 className="font-semibold">Captura rápida</h2>
+      <h2 className="section-title">Captura rápida</h2>
       <input className="input" placeholder="Cole o link do Instagram, Facebook, WhatsApp ou um @"
         value={entrada} onChange={(e) => interpretar(e.target.value)} />
       {entrada && !cap && <p className="text-xs text-red-600">Não reconheci esse link.</p>}
@@ -80,7 +80,7 @@ export default function CapturaRapida({ onSalvo }: { onSalvo?: (l: Lead) => void
       )}
       {cap && (
         <form onSubmit={salvar} className="space-y-2">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-zinc-500">
             {cap.instagram && <>Instagram: <b>{cap.instagram}</b> </>}
             {cap.facebook && <>Facebook: <b>{cap.facebook}</b> </>}
             {cap.site && <>Site: <b>{cap.site}</b></>}

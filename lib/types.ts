@@ -1,11 +1,12 @@
 export type Status = "novo" | "contatado" | "proposta" | "fechado" | "perdido";
 
-export const STATUS: { id: Status; label: string; cor: string }[] = [
-  { id: "novo", label: "Novo", cor: "bg-slate-100" },
-  { id: "contatado", label: "Contatado", cor: "bg-blue-50" },
-  { id: "proposta", label: "Proposta", cor: "bg-amber-50" },
-  { id: "fechado", label: "Fechado", cor: "bg-green-50" },
-  { id: "perdido", label: "Perdido", cor: "bg-red-50" },
+// cor: fundo da coluna do funil · ponto: bolinha de destaque · badge: etiqueta em tabelas
+export const STATUS: { id: Status; label: string; cor: string; ponto: string; badge: string }[] = [
+  { id: "novo", label: "Novo", cor: "bg-zinc-100/70", ponto: "bg-zinc-400", badge: "bg-zinc-100 text-zinc-700" },
+  { id: "contatado", label: "Contatado", cor: "bg-sky-50", ponto: "bg-sky-500", badge: "bg-sky-50 text-sky-700" },
+  { id: "proposta", label: "Proposta", cor: "bg-amber-50", ponto: "bg-amber-500", badge: "bg-amber-50 text-amber-700" },
+  { id: "fechado", label: "Fechado", cor: "bg-emerald-50", ponto: "bg-emerald-500", badge: "bg-emerald-50 text-emerald-700" },
+  { id: "perdido", label: "Perdido", cor: "bg-rose-50", ponto: "bg-rose-500", badge: "bg-rose-50 text-rose-700" },
 ];
 
 export const TIPOS = [
@@ -77,10 +78,10 @@ export type ItemProposta = { descricao: string; valor: number };
 export type StatusProposta = "rascunho" | "enviada" | "aceita" | "recusada";
 
 export const STATUS_PROPOSTA: { id: StatusProposta; label: string; cor: string }[] = [
-  { id: "rascunho", label: "Rascunho", cor: "bg-slate-100 text-slate-700" },
-  { id: "enviada", label: "Enviada", cor: "bg-amber-100 text-amber-800" },
-  { id: "aceita", label: "Aceita", cor: "bg-green-100 text-green-800" },
-  { id: "recusada", label: "Recusada", cor: "bg-red-100 text-red-700" },
+  { id: "rascunho", label: "Rascunho", cor: "bg-zinc-100 text-zinc-700" },
+  { id: "enviada", label: "Enviada", cor: "bg-amber-50 text-amber-700" },
+  { id: "aceita", label: "Aceita", cor: "bg-emerald-50 text-emerald-700" },
+  { id: "recusada", label: "Recusada", cor: "bg-rose-50 text-rose-700" },
 ];
 
 export type Proposta = {

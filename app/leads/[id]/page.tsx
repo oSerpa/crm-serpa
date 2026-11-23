@@ -79,7 +79,7 @@ export default function LeadDetalhe() {
     router.push("/leads");
   }
 
-  if (!lead) return <p className="text-sm text-slate-500">Carregando...</p>;
+  if (!lead) return <p className="text-sm text-zinc-500">Carregando...</p>;
   const whats = linkWhats(lead.whatsapp || lead.telefone);
 
   return (
@@ -91,8 +91,8 @@ export default function LeadDetalhe() {
           <>
             <div className="flex flex-wrap items-start gap-2">
               <div className="mr-auto">
-                <h1 className="text-xl font-bold">{lead.nome}</h1>
-                <p className="text-sm text-slate-500">
+                <h1 className="page-title">{lead.nome}</h1>
+                <p className="text-sm text-zinc-500">
                   {[label(TIPOS, lead.tipo), lead.categoria, lead.cidade].filter(Boolean).join(" · ")}
                 </p>
               </div>
@@ -106,21 +106,21 @@ export default function LeadDetalhe() {
               {lead.site && <a className="btn-sec" href={lead.site.startsWith("http") ? lead.site : `https://${lead.site}`} target="_blank">Site</a>}
             </div>
             <dl className="grid gap-x-4 gap-y-1 text-sm sm:grid-cols-2">
-              <dt className="text-slate-500">Etapa</dt><dd>{label(STATUS, lead.status)}</dd>
-              <dt className="text-slate-500">Origem</dt><dd>{label(ORIGENS, lead.origem)}</dd>
-              <dt className="text-slate-500">Telefone</dt><dd>{lead.telefone || lead.whatsapp || "-"}</dd>
-              <dt className="text-slate-500">E-mail</dt><dd>{lead.email || "-"}</dd>
-              <dt className="text-slate-500">Endereço</dt><dd>{lead.endereco || "-"}</dd>
-              <dt className="text-slate-500">Valor estimado</dt><dd>{brl(lead.valor_estimado) || "-"}</dd>
-              <dt className="text-slate-500">Tem site?</dt><dd>{lead.site ? "Sim" : "Não"}</dd>
+              <dt className="text-zinc-500">Etapa</dt><dd>{label(STATUS, lead.status)}</dd>
+              <dt className="text-zinc-500">Origem</dt><dd>{label(ORIGENS, lead.origem)}</dd>
+              <dt className="text-zinc-500">Telefone</dt><dd>{lead.telefone || lead.whatsapp || "-"}</dd>
+              <dt className="text-zinc-500">E-mail</dt><dd>{lead.email || "-"}</dd>
+              <dt className="text-zinc-500">Endereço</dt><dd>{lead.endereco || "-"}</dd>
+              <dt className="text-zinc-500">Valor estimado</dt><dd>{brl(lead.valor_estimado) || "-"}</dd>
+              <dt className="text-zinc-500">Tem site?</dt><dd>{lead.site ? "Sim" : "Não"}</dd>
             </dl>
-            {lead.observacoes && <p className="whitespace-pre-wrap rounded bg-slate-50 p-2 text-sm">{lead.observacoes}</p>}
+            {lead.observacoes && <p className="whitespace-pre-wrap rounded bg-zinc-50 p-2 text-sm">{lead.observacoes}</p>}
           </>
         )}
 
         {!editando && <Abordagem lead={lead} onRegistrado={carregar} />}
 
-        <h2 className="pt-2 font-semibold">Histórico de contato</h2>
+        <h2 className="section-title pt-3">Histórico de contato</h2>
         <form onSubmit={addInteracao} className="flex flex-wrap gap-2">
           <select className="input w-auto" value={canal} onChange={(e) => setCanal(e.target.value)}>
             {CANAIS.map((c) => <option key={c}>{c}</option>)}
@@ -131,18 +131,18 @@ export default function LeadDetalhe() {
         <ul className="space-y-2">
           {interacoes.map((i) => (
             <li key={i.id} className="border-l-2 border-indigo-200 pl-3 text-sm">
-              <span className="text-xs text-slate-400">{new Date(i.criado_em).toLocaleString("pt-BR")} · {i.canal}</span>
+              <span className="text-xs text-zinc-400">{new Date(i.criado_em).toLocaleString("pt-BR")} · {i.canal}</span>
               <p>{i.descricao}</p>
             </li>
           ))}
-          {!interacoes.length && <li className="text-sm text-slate-400">Nenhum contato registrado.</li>}
+          {!interacoes.length && <li className="text-sm text-zinc-400">Nenhum contato registrado.</li>}
         </ul>
       </div>
 
       <div className="space-y-4">
       <div className="card space-y-2">
         <div className="flex items-center">
-          <h2 className="mr-auto font-semibold">Propostas</h2>
+          <h2 className="section-title mr-auto">Propostas</h2>
           <button className="btn" onClick={novaProposta}>Nova proposta</button>
         </div>
         {propostas.map((p) => {
@@ -151,14 +151,14 @@ export default function LeadDetalhe() {
             <Link key={p.id} href={`/propostas/${p.id}`} className="flex items-center gap-2 text-sm hover:underline">
               <span className="mr-auto">#{p.numero} {p.titulo}</span>
               <span>{brl(p.total)}</span>
-              <span className={`rounded px-2 py-0.5 text-xs ${st.cor}`}>{st.label}</span>
+              <span className={`badge ${st.cor}`}>{st.label}</span>
             </Link>
           );
         })}
-        {!propostas.length && <p className="text-sm text-slate-400">Nenhuma proposta para este lead.</p>}
+        {!propostas.length && <p className="text-sm text-zinc-400">Nenhuma proposta para este lead.</p>}
       </div>
       <div className="card space-y-3">
-        <h2 className="font-semibold">Lembretes</h2>
+        <h2 className="section-title">Lembretes</h2>
         <form onSubmit={addLembrete} className="space-y-2">
           <input className="input" type="date" value={lData} onChange={(e) => setLData(e.target.value)} />
           <input className="input" placeholder="Ex: mandar proposta" value={lTexto} onChange={(e) => setLTexto(e.target.value)} />
@@ -168,7 +168,7 @@ export default function LeadDetalhe() {
           {lembretes.map((r) => (
             <li key={r.id} className="flex items-center gap-2 text-sm">
               <input type="checkbox" checked={r.feito} onChange={() => toggleLembrete(r)} />
-              <span className={r.feito ? "text-slate-400 line-through" : ""}>
+              <span className={r.feito ? "text-zinc-400 line-through" : ""}>
                 {new Date(r.data + "T12:00").toLocaleDateString("pt-BR")}: {r.descricao}
               </span>
             </li>
