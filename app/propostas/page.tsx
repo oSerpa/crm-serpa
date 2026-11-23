@@ -3,6 +3,7 @@ import PageHeader from "@/components/PageHeader";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { explicarErro } from "@/lib/erros";
 import { Proposta, STATUS_PROPOSTA, brl, dataBR } from "@/lib/types";
 
 export default function Propostas() {
@@ -13,7 +14,7 @@ export default function Propostas() {
   useEffect(() => {
     supabase.from("propostas").select("*, leads(nome, cidade, whatsapp, telefone)").order("criado_em", { ascending: false })
       .then(({ data, error }) => {
-        if (error) setErro("Rode o arquivo supabase/migrations/002_propostas.sql no SQL Editor do Supabase para ativar as propostas.");
+        if (error) setErro(explicarErro(error, "propostas"));
         setLista((data as Proposta[]) ?? []);
       });
   }, []);
