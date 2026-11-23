@@ -31,4 +31,5 @@ Suba a pasta para um repositório no GitHub, importe na https://vercel.com e cad
 - **Hoje**: resumo do funil e retornos do dia ou atrasados.
 - **Funil**: kanban com arrastar e soltar (no celular, use o seletor do card).
 - **Leads**: lista com busca e filtros, cadastro manual. Cada lead tem botões de WhatsApp, Instagram e Facebook, histórico de contato e lembretes.
+- **Buscar**: procura negócios por cidade e categoria no OpenStreetMap (grátis), mostra quem não tem site e importa como lead sem duplicar.
 - **Serviços**: seus serviços com preço e mensagem pronta de abordagem (usada na etapa 3).
