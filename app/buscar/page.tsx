@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import { CATEGORIAS, Cidade, Negocio, buscarCidades, buscarNegocios, linkMaps } from "@/lib/osm";
+import { CATEGORIAS, Cidade, EstadoBusca, Negocio, buscarCidades, buscarNegocios, linkMaps, semAcento, temMais } from "@/lib/osm";
 
 export default function Buscar() {
   const [textoCidade, setTextoCidade] = useState("");
@@ -17,6 +17,7 @@ export default function Buscar() {
   const [soComContato, setSoComContato] = useState(false);
   const [carregando, setCarregando] = useState(false);
   const [msg, setMsg] = useState("");
+  const [estado, setEstado] = useState<EstadoBusca>({});
 
   useEffect(() => {
     supabase.from("leads").select("id_externo").not("id_externo", "is", null)
@@ -37,20 +38,31 @@ export default function Buscar() {
     } catch (err) { setMsg((err as Error).message); }
   }
 
-  async function procurar(e: React.FormEvent) {
-    e.preventDefault();
+  async function carregar(novo: boolean) {
     if (!cidade) return;
-    setCarregando(true); setMsg(""); setSelecionados(new Set());
+    const est: EstadoBusca = novo ? {} : estado;
+    setCarregando(true); setMsg("");
+    if (novo) { setResultados([]); setSelecionados(new Set()); }
     try {
-      const r = await buscarNegocios(cidade.areaId, categoria, nome);
-      setResultados(r);
-      if (!r.length) setMsg("Nada encontrado no OpenStreetMap para essa busca. Use o link do Google Maps abaixo para procurar manualmente.");
+      const r = await buscarNegocios(cidade, categoria, est);
+      const base = novo ? [] : resultados;
+      const ids = new Set(base.map((n) => n.idExterno));
+      const juntos = [...base, ...r.filter((n) => !ids.has(n.idExterno))].sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+      setResultados(juntos);
+      if (!juntos.length) setMsg("Nada encontrado no OpenStreetMap para essa busca. Use o link do Google Maps acima para procurar manualmente.");
     } catch (err) { setMsg((err as Error).message); }
+    setEstado({ ...est });
     setCarregando(false);
   }
 
+  function procurar(e: React.FormEvent) {
+    e.preventDefault();
+    carregar(true);
+  }
+
   const visiveis = useMemo(() => resultados.filter((n) =>
-    (!soSemSite || !n.site) && (!soComContato || n.telefone || n.whatsapp || n.instagram)), [resultados, soSemSite, soComContato]);
+    (!soSemSite || !n.site) && (!soComContato || n.telefone || n.whatsapp || n.instagram) &&
+    (!nome.trim() || semAcento(n.nome).includes(semAcento(nome.trim())))), [resultados, soSemSite, soComContato, nome]);
 
   const selecionaveis = visiveis.filter((n) => !jaImportados.has(n.idExterno));
 
@@ -104,20 +116,20 @@ export default function Buscar() {
           <div className="space-y-1">
             <p className="text-xs text-slate-500">Qual delas?</p>
             {cidades.map((c) => (
-              <button key={c.areaId} className="block text-left text-sm text-indigo-700 hover:underline" onClick={() => { setCidade(c); setCidades([]); }}>{c.nome}</button>
+              <button key={c.viewbox} className="block text-left text-sm text-indigo-700 hover:underline" onClick={() => { setCidade(c); setCidades([]); setResultados([]); setEstado({}); }}>{c.nome}</button>
             ))}
           </div>
         )}
 
         <form onSubmit={procurar} className="flex flex-wrap gap-2">
-          <select className="input w-auto" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+          <select className="input w-auto" value={categoria} onChange={(e) => { setCategoria(e.target.value); setResultados([]); setEstado({}); }}>
             {CATEGORIAS.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
           </select>
-          <input className="input max-w-xs" placeholder="Nome contém (opcional)" value={nome} onChange={(e) => setNome(e.target.value)} />
+          <input className="input max-w-xs" placeholder="Filtrar por nome (opcional)" value={nome} onChange={(e) => setNome(e.target.value)} />
           <button className="btn" disabled={!cidade || carregando}>{carregando ? "Buscando..." : "Buscar"}</button>
         </form>
         <p className="text-xs text-slate-500">
-          Os dados vêm do OpenStreetMap, que é grátis mas não tem todos os negócios pequenos.
+          Os dados vêm do OpenStreetMap, que é grátis mas não tem todos os negócios pequenos. Cada busca traz até 40 lugares por tipo; use "Carregar mais" para ver o resto.
           {buscaGoogle && <> Para completar, <a className="text-indigo-700 underline" href={buscaGoogle} target="_blank">abra a mesma busca no Google Maps</a> e cadastre os que faltarem em <Link className="text-indigo-700 underline" href="/leads">Leads</Link>.</>}
         </p>
       </div>
@@ -158,6 +170,11 @@ export default function Buscar() {
               </tbody>
             </table>
           </div>
+          {temMais(estado) && (
+            <button className="btn-sec" disabled={carregando} onClick={() => carregar(false)}>
+              {carregando ? "Buscando..." : "Carregar mais resultados"}
+            </button>
+          )}
         </div>
       )}
     </div>
