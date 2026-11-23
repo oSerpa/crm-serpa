@@ -54,21 +54,25 @@ const t = (tags: Record<string, string>, ...chaves: string[]) => {
   return null;
 };
 
-export async function buscarNegocios(areaId: number, categoria: string, nomeContem = ""): Promise<Negocio[]> {
+export function montarQuery(areaId: number, categoria: string, nomeContem = ""): string | null {
   const cat = CATEGORIAS.find((c) => c.id === categoria);
-  if (!cat) return [];
-  const filtroNome = nomeContem.trim() ? `["name"~"${nomeContem.trim().replace(/["\\]/g, "")}",i]` : '["name"]';
+  if (!cat || !Number.isFinite(areaId)) return null;
+  const limpo = nomeContem.trim().replace(/["\\]/g, "");
+  const filtroNome = limpo ? `["name"~"${limpo}",i]` : '["name"]';
   const partes = cat.tags.map((tag) => `nwr[${tag}]${filtroNome}(area.a);`).join("");
-  const query = `[out:json][timeout:60];area(id:${areaId})->.a;(${partes});out center tags 500;`;
+  return `[out:json][timeout:25];area(id:${areaId})->.a;(${partes});out center tags 500;`;
+}
 
-  const r = await fetch("https://overpass-api.de/api/interpreter", {
+type Elemento = { type: string; id: number; lat?: number; lon?: number; center?: { lat: number; lon: number }; tags?: Record<string, string> };
+
+export async function buscarNegocios(areaId: number, categoria: string, nomeContem = ""): Promise<Negocio[]> {
+  const r = await fetch("/api/negocios", {
     method: "POST",
-    body: new URLSearchParams({ data: query }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ areaId, categoria, nome: nomeContem }),
   });
-  if (r.status === 429 || r.status === 504)
-    throw new Error("O servidor do OpenStreetMap está ocupado. Espere uns segundos e tente de novo.");
-  if (!r.ok) throw new Error(`Erro na busca (${r.status}).`);
-  const json: { elements: { type: string; id: number; lat?: number; lon?: number; center?: { lat: number; lon: number }; tags?: Record<string, string> }[] } = await r.json();
+  const json: { elements?: Elemento[]; erro?: string } = await r.json().catch(() => ({ erro: `Erro na busca (${r.status}).` }));
+  if (!r.ok || !json.elements) throw new Error(json.erro ?? `Erro na busca (${r.status}).`);
 
   return json.elements
     .filter((e) => e.tags?.name)
