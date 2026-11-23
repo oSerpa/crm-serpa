@@ -54,6 +54,7 @@ export type Lead = {
   servico_id: string | null;
   valor_estimado: number | null;
   observacoes: string | null;
+  sem_presenca?: boolean;
   criado_em: string;
   atualizado_em: string;
 };
