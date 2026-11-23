@@ -74,3 +74,41 @@ begin
     execute format('create policy dono on %I for all using (user_id = auth.uid()) with check (user_id = auth.uid())', t);
   end loop;
 end $$;
+
+-- ===== Etapa 4 (também em supabase/migrations/002_propostas.sql) =====
+
+create table if not exists perfil (
+  user_id uuid primary key default auth.uid() references auth.users on delete cascade,
+  nome text,
+  whatsapp text,
+  email text,
+  cidade text,
+  chave_pix text,
+  rodape text
+);
+
+create table if not exists propostas (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null default auth.uid() references auth.users on delete cascade,
+  numero bigint generated always as identity,
+  lead_id uuid not null references leads on delete cascade,
+  servico_id uuid references servicos on delete set null,
+  titulo text not null,
+  itens jsonb not null default '[]'::jsonb,  -- [{ "descricao": "...", "valor": 100 }]
+  desconto numeric(10,2) not null default 0,
+  total numeric(10,2) not null default 0,
+  prazo_dias int,
+  validade date,
+  condicoes text,
+  status text not null check (status in ('rascunho','enviada','aceita','recusada')) default 'rascunho',
+  aceita_em timestamptz,
+  criado_em timestamptz not null default now()
+);
+create index if not exists propostas_lead on propostas(lead_id);
+
+alter table perfil enable row level security;
+alter table propostas enable row level security;
+drop policy if exists dono on perfil;
+create policy dono on perfil for all using (user_id = auth.uid()) with check (user_id = auth.uid());
+drop policy if exists dono on propostas;
+create policy dono on propostas for all using (user_id = auth.uid()) with check (user_id = auth.uid());

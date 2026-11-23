@@ -71,3 +71,44 @@ export function linkWhats(numero: string | null | undefined) {
   if (d.length <= 11) d = "55" + d;
   return `https://wa.me/${d}`;
 }
+
+export type ItemProposta = { descricao: string; valor: number };
+
+export type StatusProposta = "rascunho" | "enviada" | "aceita" | "recusada";
+
+export const STATUS_PROPOSTA: { id: StatusProposta; label: string; cor: string }[] = [
+  { id: "rascunho", label: "Rascunho", cor: "bg-slate-100 text-slate-700" },
+  { id: "enviada", label: "Enviada", cor: "bg-amber-100 text-amber-800" },
+  { id: "aceita", label: "Aceita", cor: "bg-green-100 text-green-800" },
+  { id: "recusada", label: "Recusada", cor: "bg-red-100 text-red-700" },
+];
+
+export type Proposta = {
+  id: string;
+  numero: number;
+  lead_id: string;
+  servico_id: string | null;
+  titulo: string;
+  itens: ItemProposta[];
+  desconto: number;
+  total: number;
+  prazo_dias: number | null;
+  validade: string | null;
+  condicoes: string | null;
+  status: StatusProposta;
+  aceita_em: string | null;
+  criado_em: string;
+  leads?: Pick<Lead, "nome" | "cidade" | "whatsapp" | "telefone"> | null;
+};
+
+export type Perfil = {
+  nome: string | null;
+  whatsapp: string | null;
+  email: string | null;
+  cidade: string | null;
+  chave_pix: string | null;
+  rodape: string | null;
+};
+
+export const dataBR = (iso: string | null | undefined) =>
+  iso ? new Date(iso.length === 10 ? iso + "T12:00" : iso).toLocaleDateString("pt-BR") : "";
