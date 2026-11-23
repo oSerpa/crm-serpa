@@ -5,6 +5,9 @@ import { supabase } from "@/lib/supabase";
 import { CANAIS, Interacao, Lead, Lembrete, ORIGENS, STATUS, TIPOS, brl, linkWhats } from "@/lib/types";
 import LeadForm from "@/components/LeadForm";
 import Abordagem from "@/components/Abordagem";
+import { criarProposta } from "@/lib/propostas";
+import { Proposta, STATUS_PROPOSTA as SP } from "@/lib/types";
+import Link from "next/link";
 
 const label = (lista: { id: string; label: string }[], id: string | null) => lista.find((x) => x.id === id)?.label ?? "";
 
@@ -18,6 +21,7 @@ export default function LeadDetalhe() {
   const [lead, setLead] = useState<Lead | null>(null);
   const [interacoes, setInteracoes] = useState<Interacao[]>([]);
   const [lembretes, setLembretes] = useState<Lembrete[]>([]);
+  const [propostas, setPropostas] = useState<Proposta[]>([]);
   const [editando, setEditando] = useState(false);
   const [canal, setCanal] = useState("whatsapp");
   const [texto, setTexto] = useState("");
@@ -30,6 +34,8 @@ export default function LeadDetalhe() {
       supabase.from("interacoes").select("*").eq("lead_id", id).order("criado_em", { ascending: false }),
       supabase.from("lembretes").select("*").eq("lead_id", id).order("data"),
     ]);
+    supabase.from("propostas").select("*").eq("lead_id", id).order("criado_em", { ascending: false })
+      .then(({ data }) => setPropostas((data as Proposta[]) ?? []));
     setLead(l.data);
     setInteracoes(i.data ?? []);
     setLembretes(r.data ?? []);
@@ -56,6 +62,15 @@ export default function LeadDetalhe() {
   async function toggleLembrete(r: Lembrete) {
     await supabase.from("lembretes").update({ feito: !r.feito }).eq("id", r.id);
     carregar();
+  }
+
+  async function novaProposta() {
+    try {
+      const pid = await criarProposta(lead!);
+      router.push(`/propostas/${pid}`);
+    } catch (err) {
+      alert((err as Error).message);
+    }
   }
 
   async function excluir() {
@@ -124,6 +139,24 @@ export default function LeadDetalhe() {
         </ul>
       </div>
 
+      <div className="space-y-4">
+      <div className="card space-y-2">
+        <div className="flex items-center">
+          <h2 className="mr-auto font-semibold">Propostas</h2>
+          <button className="btn" onClick={novaProposta}>Nova proposta</button>
+        </div>
+        {propostas.map((p) => {
+          const st = SP.find((s) => s.id === p.status)!;
+          return (
+            <Link key={p.id} href={`/propostas/${p.id}`} className="flex items-center gap-2 text-sm hover:underline">
+              <span className="mr-auto">#{p.numero} {p.titulo}</span>
+              <span>{brl(p.total)}</span>
+              <span className={`rounded px-2 py-0.5 text-xs ${st.cor}`}>{st.label}</span>
+            </Link>
+          );
+        })}
+        {!propostas.length && <p className="text-sm text-slate-400">Nenhuma proposta para este lead.</p>}
+      </div>
       <div className="card space-y-3">
         <h2 className="font-semibold">Lembretes</h2>
         <form onSubmit={addLembrete} className="space-y-2">
@@ -141,6 +174,7 @@ export default function LeadDetalhe() {
             </li>
           ))}
         </ul>
+      </div>
       </div>
     </div>
   );

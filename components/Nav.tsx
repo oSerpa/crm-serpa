@@ -8,7 +8,10 @@ const links = [
   { href: "/funil", label: "Funil" },
   { href: "/leads", label: "Leads" },
   { href: "/buscar", label: "Buscar" },
+  { href: "/propostas", label: "Propostas" },
+  { href: "/painel", label: "Painel" },
   { href: "/servicos", label: "Serviços" },
+  { href: "/perfil", label: "Meus dados" },
 ];
 
 export default function Nav() {

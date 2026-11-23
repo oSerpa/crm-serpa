@@ -12,6 +12,12 @@ Stack: Next.js 15 + Supabase (banco e login) + Tailwind. Tudo roda no plano grat
 4. Na pasta do projeto, copie `.env.example` para `.env.local` e preencha as duas variáveis.
 5. Opcional: em **Authentication > Sign In / Providers > Email**, desligue "Confirm email" para não precisar confirmar o cadastro por e-mail.
 
+### Atualizações do banco
+
+Quando uma etapa nova trouxer arquivo em `supabase/migrations/`, rode esse arquivo no SQL Editor do Supabase (pode rodar mais de uma vez sem problema).
+
+- `002_propostas.sql`: propostas e Meus dados (etapa 4).
+
 ## Rodar no computador
 
 ```bash
@@ -34,4 +40,7 @@ Suba a pasta para um repositório no GitHub, importe na https://vercel.com e cad
 - **Buscar**: procura negócios por cidade e categoria no OpenStreetMap (grátis), mostra quem não tem site e importa como lead sem duplicar.
 - **Captura rápida** (em Hoje e Leads): cole o link do Instagram, Facebook, WhatsApp ou um @ e o lead é criado em segundos, com aviso se já existir.
 - **Abordagem** (na página do lead): escolha o serviço e a mensagem pronta aparece; botões abrem o WhatsApp com o texto ou copiam e abrem o direct/Messenger, registrando o contato no histórico.
+- **Propostas**: crie a partir do lead, com itens, desconto, prazo, validade e condições. Imprime ou salva em PDF pelo navegador e envia um resumo no WhatsApp. Marcar como aceita leva o lead para Fechado.
+- **Painel**: fechado no mês, últimos 6 meses, propostas em aberto, ticket médio, faturamento por serviço e conversão por origem.
+- **Meus dados**: nome, contato e Pix que aparecem nas propostas.
 - **Serviços**: seus serviços com preço e mensagem pronta de abordagem (usada na etapa 3).
