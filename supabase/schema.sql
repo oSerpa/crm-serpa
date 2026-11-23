@@ -120,3 +120,7 @@ create policy dono on propostas for all using (user_id = auth.uid()) with check 
 grant select, insert, update, delete on public.propostas, public.perfil to authenticated;
 grant usage, select on all sequences in schema public to authenticated;
 notify pgrst, 'reload schema';
+
+-- ===== Fila de contatos (também em supabase/migrations/003_sem_presenca.sql) =====
+alter table leads add column if not exists sem_presenca boolean not null default false;
+notify pgrst, 'reload schema';

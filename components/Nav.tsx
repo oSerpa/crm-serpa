@@ -13,6 +13,7 @@ const grupos = [
       { href: "/funil", label: "Funil", icone: "funil" },
       { href: "/leads", label: "Leads", icone: "leads" },
       { href: "/buscar", label: "Buscar no mapa", icone: "buscar" },
+      { href: "/completar", label: "Completar contatos", icone: "completar" },
       { href: "/propostas", label: "Propostas", icone: "propostas" },
     ],
   },
