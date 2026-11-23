@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { Lead, Lembrete, STATUS, brl } from "@/lib/types";
+import CapturaRapida from "@/components/CapturaRapida";
 
 const hoje = () => new Date().toLocaleDateString("sv-SE"); // AAAA-MM-DD no fuso local
 
@@ -36,6 +37,8 @@ export default function Hoje() {
           );
         })}
       </div>
+
+      <CapturaRapida onSalvo={carregar} />
 
       <div className="card">
         <h2 className="mb-2 font-semibold">Retornos para hoje e atrasados</h2>

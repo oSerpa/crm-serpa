@@ -4,6 +4,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { Lead, ORIGENS, STATUS, TIPOS, brl } from "@/lib/types";
 import LeadForm from "@/components/LeadForm";
+import CapturaRapida from "@/components/CapturaRapida";
 
 const label = (lista: { id: string; label: string }[], id: string | null) => lista.find((x) => x.id === id)?.label ?? "";
 
@@ -32,6 +33,8 @@ export default function Leads() {
         <h1 className="mr-auto text-lg font-bold">Leads ({filtrados.length})</h1>
         <button className="btn" onClick={() => setNovo(!novo)}>{novo ? "Fechar" : "Novo lead"}</button>
       </div>
+
+      <CapturaRapida onSalvo={() => carregar()} />
 
       {novo && (
         <div className="card">

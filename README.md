@@ -32,4 +32,6 @@ Suba a pasta para um repositório no GitHub, importe na https://vercel.com e cad
 - **Funil**: kanban com arrastar e soltar (no celular, use o seletor do card).
 - **Leads**: lista com busca e filtros, cadastro manual. Cada lead tem botões de WhatsApp, Instagram e Facebook, histórico de contato e lembretes.
 - **Buscar**: procura negócios por cidade e categoria no OpenStreetMap (grátis), mostra quem não tem site e importa como lead sem duplicar.
+- **Captura rápida** (em Hoje e Leads): cole o link do Instagram, Facebook, WhatsApp ou um @ e o lead é criado em segundos, com aviso se já existir.
+- **Abordagem** (na página do lead): escolha o serviço e a mensagem pronta aparece; botões abrem o WhatsApp com o texto ou copiam e abrem o direct/Messenger, registrando o contato no histórico.
 - **Serviços**: seus serviços com preço e mensagem pronta de abordagem (usada na etapa 3).

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Servico, brl } from "@/lib/types";
+import { MENSAGENS_PADRAO } from "@/lib/abordagem";
 
 const SUGESTOES = ["Site institucional", "Landing page", "Aplicativo", "Kit de fotos", "Documentos", "Currículo", "Edição de vídeo", "Edição de foto"];
 const vazio = { nome: "", descricao: "", preco: "", mensagem_padrao: "" };
@@ -29,7 +30,7 @@ export default function Servicos() {
 
   async function criarSugestoes() {
     const existentes = new Set(lista.map((s) => s.nome));
-    const novos = SUGESTOES.filter((n) => !existentes.has(n)).map((nome) => ({ nome }));
+    const novos = SUGESTOES.filter((n) => !existentes.has(n)).map((nome) => ({ nome, mensagem_padrao: MENSAGENS_PADRAO[nome] ?? null }));
     if (novos.length) await supabase.from("servicos").insert(novos);
     carregar();
   }
@@ -46,7 +47,7 @@ export default function Servicos() {
         <input className="input" placeholder="Nome *" required value={f.nome} onChange={(e) => setF({ ...f, nome: e.target.value })} />
         <input className="input" placeholder="Preço base (R$)" type="number" step="0.01" value={f.preco} onChange={(e) => setF({ ...f, preco: e.target.value })} />
         <textarea className="input" rows={2} placeholder="Descrição" value={f.descricao} onChange={(e) => setF({ ...f, descricao: e.target.value })} />
-        <textarea className="input" rows={4} placeholder="Mensagem pronta para abordagem. Use {nome} para o nome do cliente."
+        <textarea className="input" rows={4} placeholder="Mensagem de abordagem. Use {nome}, {cidade}, {servico} e {preco}. Se ficar vazia, uso um modelo pronto."
           value={f.mensagem_padrao} onChange={(e) => setF({ ...f, mensagem_padrao: e.target.value })} />
         <div className="flex gap-2">
           <button className="btn">Salvar</button>

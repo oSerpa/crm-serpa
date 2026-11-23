@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { CANAIS, Interacao, Lead, Lembrete, ORIGENS, STATUS, TIPOS, brl, linkWhats } from "@/lib/types";
 import LeadForm from "@/components/LeadForm";
+import Abordagem from "@/components/Abordagem";
 
 const label = (lista: { id: string; label: string }[], id: string | null) => lista.find((x) => x.id === id)?.label ?? "";
 
@@ -101,6 +102,8 @@ export default function LeadDetalhe() {
             {lead.observacoes && <p className="whitespace-pre-wrap rounded bg-slate-50 p-2 text-sm">{lead.observacoes}</p>}
           </>
         )}
+
+        {!editando && <Abordagem lead={lead} onRegistrado={carregar} />}
 
         <h2 className="pt-2 font-semibold">Histórico de contato</h2>
         <form onSubmit={addInteracao} className="flex flex-wrap gap-2">
